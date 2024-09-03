@@ -1,0 +1,30 @@
+.registration-form {
+    max-width: 600px; /* Adjust based on your design */
+    margin: 0 auto;
+    padding: 16px;
+  }
+  
+  .form-field {
+    width: 100%;
+    margin-bottom: 16px; /* Space between form fields */
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  .mat-mdc-card {
+    position: relative;
+    width: 500px;
+    margin: 100px auto;
+  }
+  .mat-mdc-card-header {
+    display: flex;
+    padding: 16px 16px 0;
+    margin: 0 auto;
+  }
+  .mat-mdc-card-footer{
+    margin: 0 auto;
+  }
+  
+
+  

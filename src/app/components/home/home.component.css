@@ -1,0 +1,50 @@
+.mat-card-header {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 16px;
+  }
+
+  .error-message {
+    color: red;
+    font-weight: bold;
+  }
+  .header-container {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between title and button */
+    align-items: center; /* Center items vertically */
+    width: 100%; /* Ensure container takes full width */
+  }
+  
+  .title-container {
+    flex: 1; /* Allow title to take up available space */
+    text-align: center; /* Center the text */
+  }
+  
+  .button-container {
+    flex-shrink: 0; /* Prevent the button from shrinking */
+  }
+  .user-info {
+    font-weight: bold;
+  }
+
+  .headerpart {
+    background-color: #ffffff; /* Background color of the header */
+    border: 1px solid #ddd; /* Light border for the box effect */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for box effect */
+    padding: 20px; /* Space inside the box */
+    margin: 20px; /* Space outside the box */
+    display: flex; /* Flexbox for aligning items */
+    justify-content: space-between; /* Space between elements */
+    align-items: center; /* Center vertically */
+  }
+  
+  .user-info {
+    font-size: 16px; /* Font size for the user info */
+    color: #666; /* Text color */
+  }
+  
+  button {
+    font-size: 14px; /* Font size for the button */
+  }
+  

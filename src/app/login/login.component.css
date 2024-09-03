@@ -1,0 +1,16 @@
+.login-form {
+    max-width: 400px;
+    margin: 100px auto;
+  }
+  
+  mat-card {
+    padding: 16px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  .mat-mdc-card-footer{
+    margin: 0 auto;
+  }
+  
