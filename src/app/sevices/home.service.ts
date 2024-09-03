@@ -8,8 +8,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class HomeService {
 
-  private apiUrl = 'https://nodedb-7h8s.onrender.com/api/studnets/getdata';
-  private baseUrl = 'https://nodedb-7h8s.onrender.com/api/studnets';
+  private apiUrl = 'https://nodedb-486k.onrender.com/api/studnets/getdata';
+  private baseUrl = 'https://nodedb-486k.onrender.com/api/studnets';
 
   constructor(private http: HttpClient) {}
 

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs'
   providedIn: 'root'
 })
 export class RegistrationService {
-  private apiUrl = 'https://nodedb-7h8s.onrender.com/api/signup/savedata';
+  private apiUrl = 'https://nodedb-486k.onrender.com/api/signup/savedata';
 
   constructor(private http: HttpClient) {}
 
