@@ -14,7 +14,7 @@ export class HomeService {
   constructor(private http: HttpClient) {}
 
   addStudent(student: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/savedata`, student);
+    return this.http.post<any>(`${this.baseUrl}/savedata`, student);
   }
 
   getStudents(): Observable<any[]> {
