@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { ReactiveFormsModule } from '@angular/forms';  
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';  
 import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
@@ -19,6 +19,10 @@ import { HomeComponent } from './components/home/home.component';
 import {MatTableModule} from '@angular/material/table';
 import { StudentFormDialogComponent } from './components/student-form-dialog/student-form-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ButtonModule } from 'primeng/button';
+import { DataViewModule } from 'primeng/dataview';
+import { TagModule } from 'primeng/tag';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,12 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatCardModule,
     HttpClientModule  ,
     MatTableModule,
-    MatDialogModule
+    MatDialogModule,
+    ButtonModule,
+    DataViewModule,
+    TagModule,
+    CardModule,
+    FormsModule,  
     
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

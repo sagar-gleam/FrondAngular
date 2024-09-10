@@ -10,7 +10,7 @@ export class AuthenticationService {
     throw new Error('Method not implemented.');
   }
 
-  private apiUrl = 'https://nodedb-486k.onrender.com/api/signup/login'; // Replace with your API endpoint
+  private apiUrl = 'http://localhost:4000/api/signup/login'; // Replace with your API endpoint
 
   constructor(private http: HttpClient) {}
 

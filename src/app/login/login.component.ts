@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
         .subscribe({
           next: (response: any) => {
             console.log('Login successful', response);
+            localStorage.setItem('token', JSON.stringify(response.token));
             localStorage.setItem('user', JSON.stringify(this.loginForm.value));
             this.loginError = null; // Clear any previous errors
             this.router.navigate(['/home']); // Navigate to the home page on success

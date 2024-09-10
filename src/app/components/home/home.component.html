@@ -1,76 +1,95 @@
-
 <div class="headerpart">
-    <span class="user-info">Logged in as: {{ userEmail }}</span>
-    <button mat-raised-button color="warn" (click)="onLogout()">Logout</button>
-  </div>
-  
-<mat-card>
-    <mat-card-header>
-        <div class="header-container">
-          <div class="title-container">
-            <h2>Students List</h2>
+  <span class="user-info">Logged in as: {{ userEmail }}</span>
+  <button mat-raised-button color="warn" (click)="onLogout()">Logout</button>
+</div>
+
+<div class="card">
+  <p-dataView #dv [value]="filteredStudents" [layout]="layout">
+    <ng-template pTemplate="header">
+      <div>
+        <div class="flex justify-content-end align-items-center" style="width: 100%;">
+          <div class="search-container" style="margin-right: 10px;">
+            <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search students..." />
           </div>
-          <div class="button-container">
-            <button mat-raised-button color="primary" (click)="onAddItem()">Add Item</button>
+          <p-dataViewLayoutOptions [layout]="layout"></p-dataViewLayoutOptions>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="list" let-students>
+      <mat-card>
+        <mat-card-header>
+          <div class="header-container">
+            <div class="title-container">
+              <h2>Students List</h2>
+            </div>
+            <div class="button-container">
+              <button mat-raised-button color="primary" (click)="onAddItem()">Add Item <i
+                  class="fas fa-plus"></i></button>
+            </div>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="errorMessage" class="error-message">
+            <p>{{ errorMessage }}</p>
+          </div>
+          <table mat-table [dataSource]="students" class="mat-elevation-z8">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> No. </th>
+              <td mat-cell *matCellDef="let student; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Name </th>
+              <td mat-cell *matCellDef="let student"> {{ student.name }} </td>
+            </ng-container>
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef> Email </th>
+              <td mat-cell *matCellDef="let student"> {{ student.email }} </td>
+            </ng-container>
+            <ng-container matColumnDef="mobileNumber">
+              <th mat-header-cell *matHeaderCellDef> Mobile Number </th>
+              <td mat-cell *matCellDef="let student"> {{ student.mobileNumber }} </td>
+            </ng-container>
+            <ng-container matColumnDef="address">
+              <th mat-header-cell *matHeaderCellDef> Address </th>
+              <td mat-cell *matCellDef="let student"> {{ student.address }} </td>
+            </ng-container>
+            <ng-container matColumnDef="dob">
+              <th mat-header-cell *matHeaderCellDef> Date of Birth </th>
+              <td mat-cell *matCellDef="let student"> {{ student.dob | date:'shortDate' }} </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Actions </th>
+              <td mat-cell *matCellDef="let student">
+                <button pButton type="button" icon="pi pi-pencil" (click)="onEdit(student)"
+                  class="p-button-rounded p-button-info" aria-label="Edit"></button>
+                <button pButton type="button" icon="pi pi-trash" style="margin-left: 10px;" (click)="onDelete(student)"
+                  class="p-button-rounded p-button-danger" aria-label="Delete"></button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </ng-template>
+    <ng-template pTemplate="grid" let-students>
+      <div class="grid">
+        <div class="card" *ngFor="let student of students">
+          <img
+            [src]="'https://images.unsplash.com/photo-1721332149371-fa99da451baa?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8' + student.profilePicture"
+            [alt]="student.name">
+          <div class="card-content">
+            <div class="card-header">{{ student.name }}</div>
+            <div class="card-body">{{ student.email }}</div>
+            <div class="card-body">{{ student.mobileNumber }}</div>
+            <div class="card-body">{{ student.address }}</div>
+            <div class="card-footer">
+              <button mat-button color="primary" (click)="onEdit(student)">Edit</button>
+              <button style=" margin-left: 10px" mat-button color="warn" (click)="onDelete(student)">Delete</button>
+            </div>
           </div>
         </div>
-      </mat-card-header>
-  
-    <mat-card-content>
-    
-      <div *ngIf="errorMessage" class="error-message">
-        <p>{{ errorMessage }}</p>
       </div>
-      <table mat-table [dataSource]="students" class="mat-elevation-z8">
-  
-        <!-- ID Column -->
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef> No. </th>
-            <td mat-cell *matCellDef="let student; let i = index"> {{ i + 1 }} </td>
-        </ng-container>
-  
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Name </th>
-          <td mat-cell *matCellDef="let student"> {{ student.name }} </td>
-        </ng-container>
-  
-        <!-- Email Column -->
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef> Email </th>
-          <td mat-cell *matCellDef="let student"> {{ student.email }} </td>
-        </ng-container>
-  
-        <!-- Mobile Number Column -->
-        <ng-container matColumnDef="mobileNumber">
-          <th mat-header-cell *matHeaderCellDef> Mobile Number </th>
-          <td mat-cell *matCellDef="let student"> {{ student.mobileNumber }} </td>
-        </ng-container>
-  
-        <!-- Address Column -->
-        <ng-container matColumnDef="address">
-          <th mat-header-cell *matHeaderCellDef> Address </th>
-          <td mat-cell *matCellDef="let student"> {{ student.address }} </td>
-        </ng-container>
-  
-        <!-- Date of Birth Column -->
-        <ng-container matColumnDef="dob">
-          <th mat-header-cell *matHeaderCellDef> Date of Birth </th>
-          <td mat-cell *matCellDef="let student"> {{ student.dob | date:'shortDate' }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> Actions </th>
-            <td mat-cell *matCellDef="let student">
-              <button mat-button color="primary" (click)="onEdit(student)">Edit</button>
-              <button mat-button color="warn" (click)="onDelete(student)">Delete</button>
-            </td>
-          </ng-container>
-  
-        <!-- Define Columns -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </mat-card-content>
-  </mat-card>
-  
+    </ng-template>
+  </p-dataView>
+</div>

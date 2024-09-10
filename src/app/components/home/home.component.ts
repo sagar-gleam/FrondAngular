@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { StudentFormDialogComponent } from '../student-form-dialog/student-form-dialog.component';
 import { AuthenticationService } from '../../authentication.service';
 import { Router } from '@angular/router'; // Import Router for navigation
+import { PrimeIcons, MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-home',
@@ -12,9 +13,12 @@ import { Router } from '@angular/router'; // Import Router for navigation
 })
 export class HomeComponent implements OnInit {
   students: any[] = [];
+  filteredStudents: any[] = [];
   errorMessage: string = '';
+  layout: any = 'list';
   displayedColumns: string[] = ['id', 'name', 'email', 'mobileNumber', 'address', 'dob', 'actions'];
   userEmail: string = '';
+  searchTerm: string = ''; 
 
   constructor(private studentService: HomeService, private dialog: MatDialog, private serlogout: AuthenticationService, private router: Router) {}
 
@@ -75,11 +79,23 @@ export class HomeComponent implements OnInit {
     this.studentService.getStudents().subscribe({
       next: (data) => {
         this.students = data;
+        this.filteredStudents = data; // Initialize filteredStudents
       },
       error: (error) => {
         this.errorMessage = 'Could not load student data.';
         console.error('There was an error!', error);
       }
     });
+  }
+
+  onSearch(): void {
+    if (this.searchTerm) {
+      this.filteredStudents = this.students.filter(student =>
+        student.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        student.email.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    } else {
+      this.filteredStudents = this.students;
+    }
   }
 }
