@@ -11,6 +11,7 @@ import { HomeService } from '../../sevices/home.service';
 export class StudentFormDialogComponent implements OnInit {
   studentForm: FormGroup;
   isEditMode: boolean = false;
+  selectedFile: File | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -23,7 +24,7 @@ export class StudentFormDialogComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       mobileNumber: ['', Validators.required],
       address: [''],
-      dob: ['']
+      dob: [''],
     });
 
     if (data) {
@@ -34,15 +35,29 @@ export class StudentFormDialogComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  onFileChange(event: any): void {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+    }
+  }
+
   onSubmit(): void {
     if (this.studentForm.valid) {
+      const formData = new FormData();
+      Object.keys(this.studentForm.controls).forEach(key => {
+        formData.append(key, this.studentForm.get(key)?.value);
+      });
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile, this.selectedFile.name);
+      }
+  
       if (this.isEditMode) {
-        this.studentService.updateStudent(this.data._id, this.studentForm.value).subscribe({
+        this.studentService.updateStudent(this.data._id, formData).subscribe({
           next: () => this.dialogRef.close(true),
           error: (error) => console.error('There was an error!', error)
         });
       } else {
-        this.studentService.addStudent(this.studentForm.value).subscribe({
+        this.studentService.addStudent(formData).subscribe({
           next: () => this.dialogRef.close(true),
           error: (error) => console.error('There was an error!', error)
         });

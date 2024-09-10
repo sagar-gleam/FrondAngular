@@ -8,8 +8,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class HomeService {
 
-  private apiUrl = 'http://localhost:4000/api/studnets/getdata';
-  private baseUrl = 'http://localhost:4000/api/studnets';
+  private apiUrl = 'http://localhost:4100/api/studnets/getdata';
+  private baseUrl = 'http://localhost:4100/api/studnets';
 
   constructor(private http: HttpClient) {}
 

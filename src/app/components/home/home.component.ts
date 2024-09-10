@@ -16,10 +16,10 @@ export class HomeComponent implements OnInit {
   filteredStudents: any[] = [];
   errorMessage: string = '';
   layout: any = 'list';
-  displayedColumns: string[] = ['id', 'name', 'email', 'mobileNumber', 'address', 'dob', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'image' ,'email', 'mobileNumber', 'address', 'dob', 'actions'];
   userEmail: string = '';
   searchTerm: string = ''; 
-
+  port: any = "http://localhost:4100/"
   constructor(private studentService: HomeService, private dialog: MatDialog, private serlogout: AuthenticationService, private router: Router) {}
 
   ngOnInit(): void {
@@ -78,6 +78,7 @@ export class HomeComponent implements OnInit {
   fetchStudentsData(): void {
     this.studentService.getStudents().subscribe({
       next: (data) => {
+        console.log(data,"datatatatat")
         this.students = data;
         this.filteredStudents = data; // Initialize filteredStudents
       },
@@ -87,6 +88,7 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+  
 
   onSearch(): void {
     if (this.searchTerm) {
