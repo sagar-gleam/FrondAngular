@@ -1,0 +1,33 @@
+<!-- user-profile.component.html -->
+<div class="user-profile-container">
+    <mat-card class="user-profile-card">
+      <mat-card-header class="user-profile-header">  
+        <div>
+          <mat-card-title class="user-profile-title">{{ user.fullName }}</mat-card-title>
+          <mat-card-subtitle class="user-profile-subtitle">{{ user.email }}</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="user-profile-content">
+        <div class="user-profile-details">
+          <div class="user-profile-detail-header">Mobile Number</div>
+          <div class="user-profile-detail-content">{{ user.mobileNumber }}</div>
+        </div>
+        <div class="user-profile-details">
+          <div class="user-profile-detail-header">Address</div>
+          <div class="user-profile-detail-content">{{ user.address }}</div>
+        </div>
+        <div class="user-profile-details">
+          <div class="user-profile-detail-header">Date of Birth</div>
+          <div class="user-profile-detail-content">{{ user.dob | date:'longDate' }}</div>
+        </div>
+        <!-- Add more user details as needed -->
+        
+        <!-- Centered button with matching header color -->
+        <div class="user-profile-button-container">
+          <button pButton type="button" icon="pi pi-angle-double-left" (click)="onBack()"
+            class="p-button-rounded user-profile-button" aria-label="user"></button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  

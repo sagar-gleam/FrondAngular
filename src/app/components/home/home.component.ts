@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HomeService } from '../../sevices/home.service';
 import { MatDialog } from '@angular/material/dialog';
 import { StudentFormDialogComponent } from '../student-form-dialog/student-form-dialog.component';
 import { AuthenticationService } from '../../authentication.service';
 import { Router } from '@angular/router'; // Import Router for navigation
 import { PrimeIcons, MenuItem } from 'primeng/api';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-home',
@@ -16,15 +18,25 @@ export class HomeComponent implements OnInit {
   filteredStudents: any[] = [];
   errorMessage: string = '';
   layout: any = 'list';
-  displayedColumns: string[] = ['id', 'name', 'image' ,'email', 'mobileNumber', 'address', 'dob', 'actions'];
+  displayedColumns: string[] = ['id', 'image', 'name', 'email', 'mobileNumber', 'address', 'dob', 'actions'];
   userEmail: string = '';
   searchTerm: string = ''; 
-  port: any = "http://localhost:4100/"
+  dataSource = new MatTableDataSource<any>([]);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
+  
+
   constructor(private studentService: HomeService, private dialog: MatDialog, private serlogout: AuthenticationService, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchStudentsData();
     this.getUserInfo();
+  }
+
+  ngAfterViewInit() {
+    if (this.paginator) {
+      this.dataSource.paginator = this.paginator;
+    }
   }
 
   getUserInfo(): void {
@@ -61,6 +73,14 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  changePassword(): void {
+    this.router.navigate(['/change-password']); // Adjust route if needed
+  }
+
+  userProfile(): void{
+    this.router.navigate(['/user-profile']); 
+  }
+
   onDelete(student: any): void {
     if (confirm(`Are you sure you want to delete student with ID ${student._id}?`)) {
       this.studentService.deleteStudent(student._id).subscribe({
@@ -81,6 +101,7 @@ export class HomeComponent implements OnInit {
         console.log(data,"datatatatat")
         this.students = data;
         this.filteredStudents = data; // Initialize filteredStudents
+        this.dataSource.data = data; // Update the data source
       },
       error: (error) => {
         this.errorMessage = 'Could not load student data.';
@@ -88,7 +109,6 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  
 
   onSearch(): void {
     if (this.searchTerm) {
@@ -99,5 +119,11 @@ export class HomeComponent implements OnInit {
     } else {
       this.filteredStudents = this.students;
     }
+  }
+  getIndex(index: number): number {
+    if (this.paginator) {
+      return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+    }
+    return index + 1;
   }
 }

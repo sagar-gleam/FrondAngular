@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs'
+import { catchError, Observable, throwError } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -13,4 +13,6 @@ export class RegistrationService {
   saveData(formData: any): Observable<any> {
     return this.http.post(this.apiUrl, formData);
   }
+
+
 }

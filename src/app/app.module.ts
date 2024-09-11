@@ -16,13 +16,17 @@ import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import {MatTableModule} from '@angular/material/table';
+import { MatTableModule} from '@angular/material/table';
 import { StudentFormDialogComponent } from './components/student-form-dialog/student-form-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { TagModule } from 'primeng/tag';
 import { CardModule } from 'primeng/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,9 @@ import { CardModule } from 'primeng/card';
     RegistrationComponent,
     LoginComponent,
     HomeComponent,
-    StudentFormDialogComponent
+    StudentFormDialogComponent,
+    ChangePasswordComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +57,9 @@ import { CardModule } from 'primeng/card';
     DataViewModule,
     TagModule,
     CardModule,
-    FormsModule,  
+    FormsModule,
+    MatPaginatorModule,
+    MatMenuModule
     
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

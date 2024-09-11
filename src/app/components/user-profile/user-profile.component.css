@@ -1,0 +1,81 @@
+/* user-profile.component.css */
+.user-profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+}
+
+.user-profile-card {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.user-profile-header {
+  display: flex;
+  align-items: center;
+  background-color: #6d885c; /* Header color */
+  color: #ffffff;
+  padding: 20px;
+}
+
+.user-profile-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.user-profile-subtitle {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin: 5px 0;
+  color: #ffffff;
+}
+
+.user-profile-content {
+  padding: 20px;
+}
+
+.user-profile-details {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+.user-profile-detail-header {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #6d885c;
+  margin-bottom: 5px;
+}
+
+.user-profile-detail-content {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Centering the button */
+.user-profile-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Button styling */
+.user-profile-button {
+  background-color: #6d885c; /* Matching header color */
+  border-color: #6d885c; /* Button border matches the header */
+  color: #ffffff;
+}
+
+.user-profile-button:hover {
+  background-color: #617654; /* Darken on hover */
+  border-color: #617654;
+}

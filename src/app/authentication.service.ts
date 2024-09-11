@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, throwError, catchError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +30,14 @@ export class AuthenticationService {
     // Optionally perform any additional logout operations here
     // For example, you might want to make a request to the server to invalidate the token
     localStorage.clear()
+  }
+
+  getUser(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:4100/api/signup/getdata').pipe(
+      catchError((error) => {
+        console.error('Error fetching students data:', error);
+        return throwError(() => new Error('Failed to fetch usr data'));
+      })
+    );
   }
 }
