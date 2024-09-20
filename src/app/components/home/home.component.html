@@ -1,15 +1,24 @@
 <div class="headerpart">
-  <span class="user-info">Logged in as: {{ userEmail }}</span>
-  <button pButton type="button" icon="pi pi-user" [matMenuTriggerFor]="menu"
-                  class="p-button-rounded p-button-info" aria-label="user"></button>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="userProfile()">Profile</button>
-    <button mat-menu-item (click)="changePassword()">Change Password</button>
-    <button mat-menu-item (click)="onLogout()">Logout</button>
-  </mat-menu>
-  <!-- <button mat-raised-button color="warn" (click)="onLogout()">Logout</button> -->
+  <div class="info-container">
+    <span class="user-info">Logged in as: {{ userEmail }}</span>
+  </div>
+  <div class="actions-container">
+    <button pButton type="button" icon="pi pi-user" [matMenuTriggerFor]="menu"
+            class="p-button-rounded p-button-info" aria-label="user" ></button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="userProfile()">Profile</button>
+      <button mat-menu-item (click)="changePassword()">Change Password</button>
+      <button mat-menu-item (click)="onLogout()">Logout</button>
+    </mat-menu>
+    <button mat-raised-button color="accent" (click)="showUsers()" style="margin-left: 10px;">Manage Users</button>
+  </div>
 </div>
 
+
+<div *ngIf="loading" class="loading-container">
+  <div class="loader"></div>
+    <!-- <p>Loading data, please wait...</p> -->
+  </div>
 <div class="card">
   <p-dataView #dv [value]="filteredStudents" [layout]="layout">
     <ng-template pTemplate="header">

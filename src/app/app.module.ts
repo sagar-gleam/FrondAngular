@@ -27,6 +27,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UserManagementComponent } from './components/user-management/user-management.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     HomeComponent,
     StudentFormDialogComponent,
     ChangePasswordComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    UserManagementComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +61,8 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     CardModule,
     FormsModule,
     MatPaginatorModule,
-    MatMenuModule
+    MatMenuModule,
+    
     
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

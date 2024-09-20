@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>Add Student</h1>
+
+<h1 mat-dialog-title>{{isEditMode ? "Edit Student" : "Add Student"}}</h1>
 <div mat-dialog-content>
   <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
     <div class="form-container">

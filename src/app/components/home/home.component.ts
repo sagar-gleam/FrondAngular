@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   userEmail: string = '';
   searchTerm: string = ''; 
   dataSource = new MatTableDataSource<any>([]);
+  loading: boolean = false; 
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   
@@ -96,12 +97,14 @@ export class HomeComponent implements OnInit {
   }
 
   fetchStudentsData(): void {
+    this.loading = true;
     this.studentService.getStudents().subscribe({
       next: (data) => {
         console.log(data,"datatatatat")
         this.students = data;
         this.filteredStudents = data; // Initialize filteredStudents
         this.dataSource.data = data; // Update the data source
+        this.loading = false;
       },
       error: (error) => {
         this.errorMessage = 'Could not load student data.';
@@ -112,18 +115,27 @@ export class HomeComponent implements OnInit {
 
   onSearch(): void {
     if (this.searchTerm) {
+      // Filter the students based on the search term
       this.filteredStudents = this.students.filter(student =>
         student.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         student.email.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     } else {
+      // If no search term, reset the filtered students to all students
       this.filteredStudents = this.students;
     }
+  
+    // Update the data source with the filtered students
+    this.dataSource.data = this.filteredStudents;
   }
   getIndex(index: number): number {
     if (this.paginator) {
       return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
     }
     return index + 1;
+  }
+
+  showUsers(): void {
+    this.router.navigate(['/user-management']);
   }
 }

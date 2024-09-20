@@ -12,6 +12,7 @@ export class StudentFormDialogComponent implements OnInit {
   studentForm: FormGroup;
   isEditMode: boolean = false;
   selectedFile: File | null = null;
+  
 
   constructor(
     private fb: FormBuilder,

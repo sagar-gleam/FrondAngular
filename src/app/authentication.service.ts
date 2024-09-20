@@ -12,6 +12,7 @@ export class AuthenticationService {
   }
 
   private apiUrl = 'http://localhost:4100/api/signup/login'; // Replace with your API endpoint
+  private apiUrl1 = 'http://localhost:4100/api/admin/user-role'; 
 
   constructor(private http: HttpClient) {}
 
@@ -31,6 +32,7 @@ export class AuthenticationService {
     // For example, you might want to make a request to the server to invalidate the token
     localStorage.clear()
   }
+  
 
   getUser(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:4100/api/signup/getdata').pipe(
@@ -40,4 +42,6 @@ export class AuthenticationService {
       })
     );
   }
+
+  
 }

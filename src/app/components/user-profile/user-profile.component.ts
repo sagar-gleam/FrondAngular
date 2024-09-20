@@ -19,16 +19,19 @@ onBack(){
 ngOnInit(): void {
   // Retrieve and parse user object from local storage
   const userJson = localStorage.getItem('user');
+  console.log(userJson);
+  
   
   if (userJson) {
     try {
       const userObject = JSON.parse(userJson);
       const email = userObject.email;
+      console.log(email,"adfdkjnzdlkvn")
 
       if (email) {
         // Fetch user data from the service
         this.Signupuser.getUser().subscribe(data => {
-          console.log(data);
+          console.log(data,"nkjdfnldnn");
           
           // Assuming the data is an array of users and each user has an 'email' property
           const matchedUser = data.find((user: any) => user.email === email);
