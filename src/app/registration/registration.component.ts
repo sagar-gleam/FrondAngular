@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class RegistrationComponent implements OnInit {
   registrationForm!: FormGroup; // Non-null assertion operator
 
-  constructor(private fb: FormBuilder, private registrationService: RegistrationService, private router: Router ) {}
+  constructor(private fb: FormBuilder, private registrationService: RegistrationService, private router: Router,  ) {}
 
   ngOnInit(): void {
     this.registrationForm = this.fb.group({
@@ -21,6 +21,11 @@ export class RegistrationComponent implements OnInit {
       mobileNumber: ['', Validators.required],
       address: [''],
       dob: ['', Validators.required],
+      role: ['user'],
+      permissions: this.fb.group({
+        read: [false],
+        write: [false]
+      })
     });
   }
 

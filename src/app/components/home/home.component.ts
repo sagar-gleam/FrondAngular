@@ -4,16 +4,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { StudentFormDialogComponent } from '../student-form-dialog/student-form-dialog.component';
 import { AuthenticationService } from '../../authentication.service';
 import { Router } from '@angular/router'; // Import Router for navigation
-import { PrimeIcons, MenuItem } from 'primeng/api';
+import { PrimeIcons, MenuItem, PrimeNGConfig, ConfirmationService } from 'primeng/api';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+
   students: any[] = [];
   filteredStudents: any[] = [];
   errorMessage: string = '';
@@ -23,15 +25,23 @@ export class HomeComponent implements OnInit {
   searchTerm: string = ''; 
   dataSource = new MatTableDataSource<any>([]);
   loading: boolean = false; 
+  userRole: String = '';
+  permissions: any;
+  
+  
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   
 
-  constructor(private studentService: HomeService, private dialog: MatDialog, private serlogout: AuthenticationService, private router: Router) {}
+  constructor(private studentService: HomeService, private dialog: MatDialog, private serlogout: AuthenticationService, private router: Router, 
+    private messageService: MessageService, private primengConfig: PrimeNGConfig,
+    private confirmationService: ConfirmationService
+  ) {}
 
   ngOnInit(): void {
     this.fetchStudentsData();
     this.getUserInfo();
+    this.primengConfig.ripple = true;
   }
 
   ngAfterViewInit() {
@@ -44,7 +54,35 @@ export class HomeComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem('user') || '{}'); // Assume user details are stored in local storage
     console.log(user)
     this.userEmail = user.email || 'Guest'; // Default to 'Guest' if no user info
+    this.userRole = user.role;
+    this.permissions = user.permissions
+    console.log(this.userRole);
+    
   }
+  
+  confirm2(student: any) {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete student with name ${student.name}?`,
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.studentService.deleteStudent(student._id).subscribe({
+          next: () => {
+            this.fetchStudentsData(); // Refresh data after deleting
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Deleted successfully' });
+          },
+          error: (error) => {
+            this.errorMessage = 'Could not delete student data.';
+            console.error('There was an error!', error);
+          }
+        });
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'info', summary: 'Rejected', detail: 'Deletion cancelled' });
+      }
+    });
+  }
+  
 
 
   onAddItem(): void {
@@ -87,6 +125,7 @@ export class HomeComponent implements OnInit {
       this.studentService.deleteStudent(student._id).subscribe({
         next: () => {
           this.fetchStudentsData(); // Refresh data after deleting
+          this.messageService.add({severity:'success', summary: 'success', detail: 'Delete successfully'});
         },
         error: (error) => {
           this.errorMessage = 'Could not delete student data.';
@@ -111,6 +150,7 @@ export class HomeComponent implements OnInit {
         console.error('There was an error!', error);
       }
     });
+
   }
 
   onSearch(): void {

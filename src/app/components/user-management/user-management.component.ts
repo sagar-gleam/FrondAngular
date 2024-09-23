@@ -5,25 +5,165 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.css'] // Fixed spelling from `styleUrl` to `styleUrls`
+  styleUrls: ['./user-management.component.css']
 })
 export class UserManagementComponent implements OnInit {
   users: any[] = [];
- 
+  filteredUsers: any[] = [];
+  loggedInUser: any; // Store logged-in user details
+
   constructor(private userService: AuthenticationService, private router: Router) {}
 
   ngOnInit(): void {
-   
+    this.getLoggedInUser();
+    this.fetchUsers();
+  }
+
+  // Get the logged-in user's information from localStorage
+  getLoggedInUser(): void {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      this.loggedInUser = JSON.parse(storedUser); // Assuming the user object is stored here after login
+    }
+  }
+
+  fetchUsers(): void {
+    this.userService.getUser().subscribe((data: any[]) => {
+      this.users = data;
+      // Filter out the logged-in user (especially if they're an admin)
+      this.filteredUsers = this.users.filter(user => user._id !== this.loggedInUser._id);
+    });
+  }
+
+  onPermissionChange(user: any, permission: string, event: any): void {
+    const isChecked = event.checked; // Access the checked property
+  
+    switch (permission) {
+      case 'read':
+        if (isChecked) {
+          this.grantReadPermission(user);
+        } else {
+          this.revokeReadPermission(user);
+        }
+        break;
+      case 'write':
+        if (isChecked) {
+          this.grantWritePermission(user);
+        } else {
+          this.revokeWritePermission(user);
+        }
+        break;
+      case 'delete':
+        if (isChecked) {
+          this.grantDeletePermission(user);
+        } else {
+          this.revokeDeletePermission(user);
+        }
+        break;
+    }
+  }
+  
+  onRoleChange(user: any, event: any): void {
+    const isChecked = event.checked; // Access the checked property
+  
+    if (isChecked) {
+      this.makeAdmin(user);
+    } else {
+      this.removeAdmin(user);
+    }
+  }
+
+  makeAdmin(user: any): void {
+    this.userService.promoteToAdmin(user._id).subscribe(() => {
+      user.role = 'admin'; // Update user role locally
+    });
+  }
+
+  removeAdmin(user: any): void {
+    this.userService.removeAdmin(user._id).subscribe(() => {
+      user.role = 'user'; // Update user role locally
+    });
   }
 
   grantReadPermission(user: any): void {
-    console.log(`Grant read permission to ${user.email}`);
+    this.userService.grantReadPermission(user._id).subscribe(
+      response => {
+        user.permissions.read = true;  // Update user role locally
+        console.log('Read permission granted:', response);
+      },
+      error => {
+        console.error('Error granting read permission:', error);
+      }
+    );
   }
-  
+
+
+
+  revokeReadPermission(user: any) {
+    const userId = user.id; // Assuming user has an id property
+    this.userService.revokeReadPermission(user._id).subscribe(
+      response => {
+        user.permissions.read = false;  // Update user role locally
+        console.log('Read permission granted:', response);
+      },
+      error => {
+        console.error('Error granting read permission:', error);
+      }
+    );
+  }
+
   grantWritePermission(user: any): void {
-    console.log(`Grant write permission to ${user.email}`);
+    this.userService.grantWritePermission(user._id).subscribe(
+      response => {
+        user.permissions.write = true;  // Update user role locally
+        console.log('write permission granted:', response);
+      },
+      error => {
+        console.error('Error granting read permission:', error);
+      }
+    );
   }
+
+  revokeWritePermission(user: any) {
+    const userId = user.id; // Assuming user has an id property
+    this.userService.revokeWritePermission(user._id).subscribe(
+      response => {
+        user.permissions.write = false;  // Update user role locally
+        console.log('write permission granted:', response);
+      },
+      error => {
+        console.error('Error granting read permission:', error);
+      }
+    );
+  }
+
+  grantDeletePermission(user: any): void {
+    this.userService.grantDeletePermission(user._id).subscribe(
+      response => {
+        user.permissions.delete = true;  // Update user role locally
+        console.log('Read permission granted:', response);
+      },
+      error => {
+        console.error('Error granting read permission:', error);
+      }
+    );
+  }
+
+  revokeDeletePermission(user: any){
+    const userId = user.id; // Assuming user has an id property
+    this.userService.revokeDeletePermission(user._id).subscribe(
+      response => {
+        user.permissions.delete = false;  // Update user role locally
+        console.log('write permission granted:', response);
+      },
+      error => {
+        console.error('Error granting read permission:', error);
+      }
+    );
+  }
+
   
+
   goBack(): void {
     this.router.navigate(['/home']);
   }

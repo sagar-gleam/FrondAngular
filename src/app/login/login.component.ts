@@ -11,6 +11,7 @@ import { AuthenticationService } from '../authentication.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   loginError: string | null = null; // Property to store the error message
+   private adminEmail = 'admin@example.com'; 
 
   constructor(
     private fb: FormBuilder,

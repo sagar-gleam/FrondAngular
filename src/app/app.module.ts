@@ -28,6 +28,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {ToastModule} from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -62,11 +66,14 @@ import { UserManagementComponent } from './components/user-management/user-manag
     FormsModule,
     MatPaginatorModule,
     MatMenuModule,
-    
-    
+    ToastModule,
+    ConfirmDialogModule,
+    MatCheckboxModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
+    MessageService,
+    ConfirmationService,
     provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
