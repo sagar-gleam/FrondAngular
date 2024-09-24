@@ -139,19 +139,20 @@ export class HomeComponent implements OnInit {
     this.loading = true;
     this.studentService.getStudents().subscribe({
       next: (data) => {
-        console.log(data,"datatatatat")
         this.students = data;
-        this.filteredStudents = data; // Initialize filteredStudents
-        this.dataSource.data = data; // Update the data source
+        this.filteredStudents = data;
+        this.dataSource.data = data;
         this.loading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Could not load student data.';
-        console.error('There was an error!', error);
+        this.loading = false;
+        this.errorMessage = 'Could not load student data. Please try again later.';
+        console.error('Error fetching student data:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: this.errorMessage });
       }
     });
-
   }
+  
 
   onSearch(): void {
     if (this.searchTerm) {

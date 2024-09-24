@@ -1,7 +1,7 @@
 
 <h1 mat-dialog-title>{{isEditMode ? "Edit Student" : "Add Student"}}</h1>
 <div mat-dialog-content>
-  <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="studentForm" >
     <div class="form-container">
       <mat-form-field appearance="fill">
         <mat-label>Name</mat-label>
@@ -50,7 +50,7 @@
 
     <div mat-dialog-actions>
       <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-raised-button color="primary" type="submit">Submit</button>
+      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Submit</button>
     </div>
   </form>
 </div>

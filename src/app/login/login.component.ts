@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -16,13 +17,14 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      email: ['admin@gmail.com', [Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]], // Email pattern
+      password: ['123', Validators.required],
     });
   }
 
@@ -37,7 +39,16 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('token', JSON.stringify(response.token));
             localStorage.setItem('user', JSON.stringify(response.user));
             this.loginError = null; // Clear any previous errors
-            this.router.navigate(['/home']); // Navigate to the home page on success
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'You have logged in successfully.'
+            });
+            
+            setTimeout(() => {
+              this.router.navigate(['/home']); 
+            }, 500);
+          // Navigate to the home page on success
           },
           error: (error: any) => {
             console.error('Login error', error);

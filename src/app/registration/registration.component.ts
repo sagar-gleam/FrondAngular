@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegistrationService } from '../registration.service'; // Import the service
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
+import { MessageService, PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-registration',
@@ -11,14 +12,14 @@ import { Router } from '@angular/router';
 export class RegistrationComponent implements OnInit {
   registrationForm!: FormGroup; // Non-null assertion operator
 
-  constructor(private fb: FormBuilder, private registrationService: RegistrationService, private router: Router,  ) {}
+  constructor(private fb: FormBuilder , private primengConfig: PrimeNGConfig, private registrationService: RegistrationService, private router: Router, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.registrationForm = this.fb.group({
       fullName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      mobileNumber: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]], // Email pattern
+      password: ['', Validators.required],
+      mobileNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]], // 10 digit mobile number
       address: [''],
       dob: ['', Validators.required],
       role: ['user'],
@@ -27,6 +28,7 @@ export class RegistrationComponent implements OnInit {
         write: [false]
       })
     });
+    this.primengConfig.ripple = true;
   }
 
   onSubmit(): void {
@@ -38,8 +40,15 @@ export class RegistrationComponent implements OnInit {
         .subscribe({
           next: (response: any) => {
             console.log('Data saved successfully', response);
-            alert('Data saved successfully')
-            this.router.navigate(['/login']);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Data Registered Successfully'
+            });
+            
+            setTimeout(() => {
+            this.router.navigate(['/login']);  
+            }, 1000);
             // this.registrationForm.reset();
           },
           error: (error: any) => {

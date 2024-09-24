@@ -1,3 +1,5 @@
+
+<p-toast position="top-right" ></p-toast>
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
     <mat-card>
       <mat-card-content>
@@ -6,25 +8,30 @@
         <mat-form-field appearance="fill">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" />
-          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')  && loginForm.get('email')?.touched">
             Email is required
           </mat-error>
-          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')  && loginForm.get('email')?.touched">
             Invalid email format
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('pattern') && loginForm.get('email')?.touched && !loginForm.get('email')?.hasError('email')">
+            Email must include &#64; and a domain like '.com'
           </mat-error>
         </mat-form-field>
   
-        <mat-form-field appearance="fill">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" />
-          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-            Password is required
-          </mat-error>
-        </mat-form-field>
+        <div class="form-field">
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" />
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+        </div>
         <div *ngIf="loginError" class="error-message">
             <mat-error>{{ loginError }}</mat-error>
           </div>
-        <button mat-raised-button color="primary" type="submit">Login</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Register</button>
       </mat-card-content>
       <mat-card-footer>
        <p>Don't have an account? <a routerLink="/signup">Sign up here</a></p>
