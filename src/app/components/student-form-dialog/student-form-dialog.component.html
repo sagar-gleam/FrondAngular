@@ -1,56 +1,71 @@
+<div class="dialog-card">
+  <h1 mat-dialog-title>{{isEditMode ? "Edit Student" : "Add Student"}}</h1>
+  <div>
+    <form [formGroup]="studentForm">
+      <div class="form-container">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+          <mat-error *ngIf="studentForm.get('name')?.hasError('required')">
+            Name is required
+          </mat-error>
+        </mat-form-field>
 
-<h1 mat-dialog-title>{{isEditMode ? "Edit Student" : "Add Student"}}</h1>
-<div mat-dialog-content>
-  <form [formGroup]="studentForm" >
-    <div class="form-container">
-      <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" />
-        <mat-error *ngIf="studentForm.get('name')?.hasError('required')">
-          Name is required
-        </mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" />
+          <mat-error *ngIf="studentForm.get('email')?.hasError('required') && studentForm.get('email')?.touched">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="studentForm.get('email')?.hasError('email') && studentForm.get('email')?.touched">
+            Invalid email format
+          </mat-error>
+          <mat-error *ngIf="studentForm.get('email')?.hasError('pattern') && studentForm.get('email')?.touched && !studentForm.get('email')?.hasError('email')">
+            Email must include &#64; and a domain like '.com'
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" />
-        <mat-error *ngIf="studentForm.get('email')?.hasError('required')">
-          Email is required
-        </mat-error>
-        <mat-error *ngIf="studentForm.get('email')?.hasError('email')">
-          Invalid email format
-        </mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Mobile Number</mat-label>
+          <input matInput formControlName="mobileNumber" />
+          <mat-error *ngIf="studentForm.get('mobileNumber')?.hasError('required') && studentForm.get('mobileNumber')?.touched">
+            Mobile number is required
+          </mat-error>
+          <mat-error *ngIf="studentForm.get('mobileNumber')?.hasError('pattern') && studentForm.get('mobileNumber')?.touched">
+            Mobile number must be exactly 10 digits
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Mobile Number</mat-label>
-        <input matInput formControlName="mobileNumber" />
-        <mat-error *ngIf="studentForm.get('mobileNumber')?.hasError('required')">
-          Mobile Number is required
-        </mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="address" />
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Address</mat-label>
-        <input matInput formControlName="address" />
-      </mat-form-field>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dob" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="studentForm.get('dob')?.hasError('required') && studentForm.get('dob')?.touched">
+            Date of Birth is required
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Date of Birth</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="dob" />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-
-    <div>
-        <input type="file" (change)="onFileChange($event)" />
+        <div class="file-upload-container">
+          <input type="file" (change)="onFileChange($event)" accept="image/*" />
+          <div *ngIf="imagePreview">
+            <img
+              [src]="imagePreview"
+              [alt]="imagePreview"
+              class="image-preview" />
+          </div>
+        </div>
       </div>
-    </div>
-    
 
-    <div mat-dialog-actions>
-      <button mat-button (click)="onCancel()">Cancel</button>
-      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Submit</button>
-    </div>
-  </form>
+      <div mat-dialog-actions>
+        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="!studentForm.valid">Submit</button>
+      </div>
+    </form>
+  </div>
 </div>

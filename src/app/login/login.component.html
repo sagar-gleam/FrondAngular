@@ -31,7 +31,7 @@
         <div *ngIf="loginError" class="error-message">
             <mat-error>{{ loginError }}</mat-error>
           </div>
-          <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Register</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Login</button>
       </mat-card-content>
       <mat-card-footer>
        <p>Don't have an account? <a routerLink="/signup">Sign up here</a></p>

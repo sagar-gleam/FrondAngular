@@ -57,6 +57,9 @@ export class HomeComponent implements OnInit {
     this.userRole = user.role;
     this.permissions = user.permissions
     console.log(this.userRole);
+     if (this.permissions && this.permissions.read) {
+      this.displayedColumns = this.displayedColumns.filter(column => column !== 'actions');
+    }
     
   }
   

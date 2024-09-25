@@ -12,7 +12,8 @@ export class StudentFormDialogComponent implements OnInit {
   studentForm: FormGroup;
   isEditMode: boolean = false;
   selectedFile: File | null = null;
-  
+  imagePreview: string | null = null;
+  currentImage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -22,52 +23,77 @@ export class StudentFormDialogComponent implements OnInit {
   ) {
     this.studentForm = this.fb.group({
       name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      mobileNumber: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]], 
+      mobileNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       address: [''],
-      dob: [''],
+      dob: ['', Validators.required],
     });
 
     if (data) {
       this.isEditMode = true;
       this.studentForm.patchValue(data);
+
+      this.currentImage = data.image; // Current image path
+      this.imagePreview = 'http://localhost:4100/' + this.currentImage;
+
     }
   }
 
   ngOnInit(): void {}
+  
 
   onFileChange(event: any): void {
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string; // Preview the new image
+      };
+      reader.readAsDataURL(this.selectedFile!);
+    } else {
+      this.selectedFile = null; // No file selected
+      this.imagePreview = this.currentImage; // Reset to current image
     }
   }
 
   onSubmit(): void {
-    if (this.studentForm.valid) {
-      const formData = new FormData();
-      Object.keys(this.studentForm.controls).forEach(key => {
-        formData.append(key, this.studentForm.get(key)?.value);
-      });
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile, this.selectedFile.name);
-      }
-  
+  if (this.studentForm.valid) {
+    const formData = new FormData();
+    Object.keys(this.studentForm.controls).forEach(key => {
+      const value = this.studentForm.get(key)?.value;
+      formData.append(key, value);
+    });
+
+    if(this.selectedFile){
+      formData.append('image', this.selectedFile, this.selectedFile.name);
+    }
       if (this.isEditMode) {
         this.studentService.updateStudent(this.data._id, formData).subscribe({
           next: () => this.dialogRef.close(true),
-          error: (error) => console.error('There was an error!', error)
+          error: (error: any) => console.error('There was an error!', error)
         });
       } else {
         this.studentService.addStudent(formData).subscribe({
           next: () => this.dialogRef.close(true),
-          error: (error) => console.error('There was an error!', error)
+          error: (error: any) => console.error('There was an error!', error)
         });
       }
-    }
+ 
+
   }
+}
+
+// Helper method to convert image URL to binary format
+private convertImageToBinary(imageUrl: string): Promise<Blob> {
+  return fetch(imageUrl)
+    .then(response => response.blob());
+}
+
+  
+  
 
   onCancel(): void {
     this.dialogRef.close();
   }
-
 }

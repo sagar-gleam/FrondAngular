@@ -32,6 +32,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {ToastModule} from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     MatMenuModule,
     ToastModule,
     ConfirmDialogModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    TooltipModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
