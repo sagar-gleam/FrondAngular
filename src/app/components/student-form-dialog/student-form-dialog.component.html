@@ -1,8 +1,8 @@
-<div class="dialog-card">
+<div class="dialog-card" fxLayout="column" fxLayoutAlign="center center">
   <h1 mat-dialog-title>{{isEditMode ? "Edit Student" : "Add Student"}}</h1>
-  <div>
+  <div fxFlex="100%">
     <form [formGroup]="studentForm">
-      <div class="form-container">
+      <div class="form-container" fxLayout="column">
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" />

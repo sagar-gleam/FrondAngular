@@ -1,23 +1,25 @@
 .dialog-card {
   padding: 20px;
-  max-width: 800px; /* Set a maximum width for the dialog */
+  max-width: 800px;
   margin: auto;
+  height: 630px;
 }
 
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Space between form fields */
+  gap: 16px; 
+  min-height: 550px;
 }
 
 .full-width {
-  width: 500px; /* Ensure all form fields are full-width */
+  width: 500px; 
 }
 
 .file-upload-container {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Space between file input and image preview */
+  gap: 10px;
 }
 
 .image-preview {
@@ -30,10 +32,13 @@
 
 @media (max-width: 768px) {
   .dialog-card {
-    padding: 15px; /* Reduce padding on smaller screens */
+    padding: 15px;
+    
+    width: 400px;
   }
   .full-width {
-    width: 300px; /* Ensure all form fields are full-width */
+    width: 365px;
   }
 
 }
+

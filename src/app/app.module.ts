@@ -33,6 +33,7 @@ import {ToastModule} from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { TooltipModule } from 'primeng/tooltip';
     ToastModule,
     ConfirmDialogModule,
     MatCheckboxModule,
-    TooltipModule
+    TooltipModule,
+    FlexLayoutModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
