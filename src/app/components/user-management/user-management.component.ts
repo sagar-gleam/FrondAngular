@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../sevices/authentication.service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { AuthenticationService } from '../../sevices/authentication.service';
+
 
 @Component({
   selector: 'app-user-management',
@@ -11,21 +13,24 @@ export class UserManagementComponent implements OnInit {
   users: any[] = [];
   filteredUsers: any[] = [];
   loggedInUser: any; // Store logged-in user details
-
   roles = ['user', 'admin']; // Possible roles
+  isUpdating: boolean = false; // Flag to disable the Update All button
 
-  constructor(private userService: AuthenticationService, private router: Router) {}
+  constructor(
+    private userService: AuthenticationService,
+    private router: Router,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.getLoggedInUser();
     this.fetchUsers();
   }
 
-  // Get the logged-in user's information from localStorage
   getLoggedInUser(): void {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      this.loggedInUser = JSON.parse(storedUser); // Assuming the user object is stored here after login
+      this.loggedInUser = JSON.parse(storedUser);
     }
   }
 
@@ -33,144 +38,61 @@ export class UserManagementComponent implements OnInit {
     this.userService.getUser().subscribe((data: any[]) => {
       this.users = data;
       this.filteredUsers = this.users.filter(user => user._id !== this.loggedInUser._id);
+  
       this.filteredUsers.forEach(user => {
-        // Ensure read is always true; load existing permissions for write and delete
-        user.permissions = {
-          read: true, // Always true
-          write: user.permissions?.write || false, // Load existing write permission
-          delete: user.permissions?.delete || false // Load existing delete permission
-        };
+        user.permissions = user.role === 'admin' 
+          ? { read: true, write: true, delete: true }
+          : { read: true, write: user.permissions?.write || false, delete: user.permissions?.delete || false };
       });
     });
   }
-
+  
   onRoleChange(user: any, event: any): void {
-    const newRole = event.value; // Get the selected role from the dropdown
+    user.role = event.value; // Update user role directly on change
 
-    if (newRole === 'admin') {
-      this.makeAdmin(user);
+    // Set permissions based on the new role
+    if (user.role === 'admin') {
+      user.permissions = { read: true, write: true, delete: true }; // Admin has all permissions
     } else {
-      this.removeAdmin(user);
+      user.permissions = { read: true, write: false, delete: false }; // Default permissions for non-admin
     }
+
+    this.isUpdating = true; // Disable the button when changing roles
   }
 
-  makeAdmin(user: any): void {
-    this.userService.promoteToAdmin(user._id).subscribe(() => {
-      user.role = 'admin'; // Update user role locally
-      user.permissions = { read: false, write: false, delete: false }; // No permissions for admins
-    });
-  }
-
-  removeAdmin(user: any): void {
-    this.userService.removeAdmin(user._id).subscribe(() => {
-      user.role = 'user'; // Update user role locally
-      user.permissions = { read: true, write: false, delete: false }; // Default permissions for users
-    });
-  }
   onPermissionChange(user: any, permission: string, event: any): void {
-    const isChecked = event.checked; 
+    user.permissions[permission] = event.checked;
+    user.permissions.read = true; // Always true
+    this.isUpdating = true; // Disable the button when changing permissions
+  }
 
-    switch (permission) {
-      case 'write':
-        user.permissions.write = isChecked;
-        if (isChecked) {
-          this.grantWritePermission(user);
-        } else {
-          this.revokeWritePermission(user);
-        }
-        break;
+  updateAllPermissions(): void {
+    const permissionsPayload = this.filteredUsers.map(user => ({
+      _id: user._id,
+      permissions: {
+        read: user.permissions.read,
+        write: user.permissions.write,
+        delete: user.permissions.delete,
+      },
+      role: user.role // Include the role in the payload
+    }));
   
-      case 'delete':
-        user.permissions.delete = isChecked;
-        if (isChecked) {
-          this.grantDeletePermission(user);
-        } else {
-          this.revokeDeletePermission(user);
-        }
-        break;
-    }
-    user.permissions.read = true;
-  
-  }
+    this.isUpdating = true; // Disable the button during the update
 
-  grantReadPermission(user: any): void {
-    this.userService.grantReadPermission(user._id).subscribe(
+    this.userService.updateUserPermissionsBatch(permissionsPayload).subscribe(
       response => {
-        user.permissions.read = true;  // Update user role locally
-        console.log('Read permission granted:', response);
+        console.log('All permissions updated successfully:', response);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Permissions and roles updated successfully!' });
       },
       error => {
-        console.error('Error granting read permission:', error);
+        console.error('Error updating permissions:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update permissions.' });
+      },
+      () => {
+        this.isUpdating = false; // Enable the button after update completes
       }
     );
   }
-
-
-
-  revokeReadPermission(user: any) {
-    const userId = user.id; // Assuming user has an id property
-    this.userService.revokeReadPermission(user._id).subscribe(
-      response => {
-        user.permissions.read = false;  // Update user role locally
-        console.log('Read permission granted:', response);
-      },
-      error => {
-        console.error('Error granting read permission:', error);
-      }
-    );
-  }
-
-  grantWritePermission(user: any): void {
-    this.userService.grantWritePermission(user._id).subscribe(
-      response => {
-        user.permissions.write = true;  // Update user role locally
-        console.log('write permission granted:', response);
-      },
-      error => {
-        console.error('Error granting read permission:', error);
-      }
-    );
-  }
-
-  revokeWritePermission(user: any) {
-    const userId = user.id; // Assuming user has an id property
-    this.userService.revokeWritePermission(user._id).subscribe(
-      response => {
-        user.permissions.write = false;  // Update user role locally
-        console.log('write permission granted:', response);
-      },
-      error => {
-        console.error('Error granting read permission:', error);
-      }
-    );
-  }
-
-  grantDeletePermission(user: any): void {
-    this.userService.grantDeletePermission(user._id).subscribe(
-      response => {
-        user.permissions.delete = true;  // Update user role locally
-        console.log('Read permission granted:', response);
-      },
-      error => {
-        console.error('Error granting read permission:', error);
-      }
-    );
-  }
-
-  revokeDeletePermission(user: any){
-    const userId = user.id; // Assuming user has an id property
-    this.userService.revokeDeletePermission(user._id).subscribe(
-      response => {
-        user.permissions.delete = false;  // Update user role locally
-        console.log('write permission granted:', response);
-      },
-      error => {
-        console.error('Error granting read permission:', error);
-      }
-    );
-  }
-
-  
 
   goBack(): void {
     this.router.navigate(['/home']);

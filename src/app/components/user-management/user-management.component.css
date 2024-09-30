@@ -30,4 +30,14 @@
   button.mat-button:hover {
     background-color: #e0e0e0;
   }
+  .button-enabled {
+    color: white !important;
+    background-color: #ff4465 !important; 
+  }
+  
+  .button-disabled {
+    color: #a9a9a9; /* Dark grey color for text */
+    background-color: #d3d3d3; /* Light grey color when disabled */
+    cursor: not-allowed; /* Change cursor to indicate disabled */
+  }
   

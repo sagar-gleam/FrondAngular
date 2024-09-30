@@ -1,17 +1,14 @@
+<p-toast position="top-right"></p-toast>
 <div class="user-management-container">
   <button mat-raised-button color="primary" (click)="goBack()">Back to Home</button>
   <h2>User Management</h2>
-  
 
   <table mat-table [dataSource]="filteredUsers" class="mat-elevation-z8">
-    
-    <!-- Email Column -->
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef>Email</th>
       <td mat-cell *matCellDef="let user">{{ user.email }}</td>
     </ng-container>
 
-    <!-- Role Column -->
     <ng-container matColumnDef="role">
       <th mat-header-cell *matHeaderCellDef>Role</th>
       <td mat-cell *matCellDef="let user">
@@ -23,7 +20,6 @@
       </td>
     </ng-container>
 
-    <!-- Permissions Column -->
     <ng-container matColumnDef="permissions">
       <th mat-header-cell *matHeaderCellDef>Permissions</th>
       <td mat-cell *matCellDef="let user">
@@ -31,23 +27,32 @@
           Read
         </mat-checkbox>
         <mat-checkbox [checked]="user.permissions.write" 
-                     (change)="onPermissionChange(user, 'write', $event)" 
-                     style="margin-left: 10px;"
-                     [disabled]="user.role === 'admin'">
+          (change)="onPermissionChange(user, 'write', $event)"
+          style="margin-left: 10px;"
+          [disabled]="user.role === 'admin'">
           Write
         </mat-checkbox>
         <mat-checkbox [checked]="user.permissions.delete" 
-                     (change)="onPermissionChange(user, 'delete', $event)" 
-                     style="margin-left: 10px;"
-                     [disabled]="user.role === 'admin'">
+          (change)="onPermissionChange(user, 'delete', $event)"
+          style="margin-left: 10px;"
+          [disabled]="user.role === 'admin'">
           Delete
         </mat-checkbox>
       </td>
     </ng-container>
 
-    <!-- Define Header and Rows -->
     <tr mat-header-row *matHeaderRowDef="['email', 'role', 'permissions']"></tr>
     <tr mat-row *matRowDef="let row; columns: ['email', 'role', 'permissions']"></tr>
   </table>
 
+  <div style="display: flex; justify-content: center; margin-top: 20px;">
+    <button 
+      mat-raised-button 
+      [ngClass]="isUpdating ? 'button-enabled' : 'button-disabled'"
+      (click)="updateAllPermissions()" 
+      [disabled]="!isUpdating"> <!-- Disable the button based on the flag -->
+      Update All
+    </button>
+  </div>
+  
 </div>
