@@ -86,7 +86,7 @@ export class AuthenticationService {
     if (!token) {
       return throwError(() => new Error('No authentication token found'));
     }
-    return this.http.put(`http://localhost:4100/api/signup//grant-read-permission/${userId}`, {},
+    return this.http.put(`http://localhost:4100/api/signup/grant-read-permission/${userId}`, {},
       {
         headers: {
           Authorization: `Bearer ${JSON.parse(token)}`,
@@ -104,7 +104,7 @@ export class AuthenticationService {
     if (!token) {
       return throwError(() => new Error('No authentication token found'));
     }
-    return this.http.put(`http://localhost:4100/api/signup//grant-write-permission/${userId}`, {},
+    return this.http.put(`http://localhost:4100/api/signup/grant-write-permission/${userId}`, {},
       {
         headers: {
           Authorization: `Bearer ${JSON.parse(token)}`,
@@ -122,7 +122,7 @@ export class AuthenticationService {
     if (!token) {
       return throwError(() => new Error('No authentication token found'));
     }
-    return this.http.put(`http://localhost:4100/api/signup//grant-delete-permission/${userId}`, {},
+    return this.http.put(`http://localhost:4100/api/signup/grant-delete-permission/${userId}`, {},
       {
         headers: {
           Authorization: `Bearer ${JSON.parse(token)}`,
@@ -140,7 +140,7 @@ export class AuthenticationService {
     if (!token) {
       return throwError(() => new Error('No authentication token found'));
     }
-    return this.http.patch(`http://localhost:4100/api/signup//grant-revoke-read/${userId}`, {},
+    return this.http.patch(`http://localhost:4100/api/signup/grant-revoke-read/${userId}`, {},
       {
         headers: {
           Authorization: `Bearer ${JSON.parse(token)}`,
@@ -158,7 +158,7 @@ export class AuthenticationService {
     if (!token) {
       return throwError(() => new Error('No authentication token found'));
     }
-    return this.http.patch(`http://localhost:4100/api/signup//grant-revoke-write/${userId}`, {},
+    return this.http.patch(`http://localhost:4100/api/signup/grant-revoke-write/${userId}`, {},
       {
         headers: {
           Authorization: `Bearer ${JSON.parse(token)}`,
@@ -187,5 +187,5 @@ export class AuthenticationService {
           return throwError(() => new Error('Failed to promote user to admin'));
         })
     );
-  } 
+  }  
 }

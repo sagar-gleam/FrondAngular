@@ -1,6 +1,8 @@
 <div class="user-management-container">
   <button mat-raised-button color="primary" (click)="goBack()">Back to Home</button>
   <h2>User Management</h2>
+  
+
   <table mat-table [dataSource]="filteredUsers" class="mat-elevation-z8">
     
     <!-- Email Column -->
@@ -9,36 +11,43 @@
       <td mat-cell *matCellDef="let user">{{ user.email }}</td>
     </ng-container>
 
+    <!-- Role Column -->
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef>Role</th>
+      <td mat-cell *matCellDef="let user">
+        <mat-radio-group [(ngModel)]="user.role" (change)="onRoleChange(user, $event)">
+          <mat-radio-button *ngFor="let role of roles" [value]="role">
+            {{ role }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </td>
+    </ng-container>
+
     <!-- Permissions Column -->
     <ng-container matColumnDef="permissions">
       <th mat-header-cell *matHeaderCellDef>Permissions</th>
       <td mat-cell *matCellDef="let user">
-
-        <!-- Read Permission Checkbox -->
-        <mat-checkbox [checked]="user.permissions.read" (change)="onPermissionChange(user, 'read', $event)">
+        <mat-checkbox [checked]="user.permissions.read" disabled>
           Read
         </mat-checkbox>
-
-        <!-- Write Permission Checkbox -->
-        <mat-checkbox [checked]="user.permissions.write" (change)="onPermissionChange(user, 'write', $event)" style="margin-left: 10px;">
+        <mat-checkbox [checked]="user.permissions.write" 
+                     (change)="onPermissionChange(user, 'write', $event)" 
+                     style="margin-left: 10px;"
+                     [disabled]="user.role === 'admin'">
           Write
         </mat-checkbox>
-
-        <!-- Delete Permission Checkbox -->
-        <mat-checkbox [checked]="user.permissions.delete" (change)="onPermissionChange(user, 'delete', $event)" style="margin-left: 10px;">
+        <mat-checkbox [checked]="user.permissions.delete" 
+                     (change)="onPermissionChange(user, 'delete', $event)" 
+                     style="margin-left: 10px;"
+                     [disabled]="user.role === 'admin'">
           Delete
         </mat-checkbox>
-
-        <!-- Admin Role Checkbox -->
-        <mat-checkbox [checked]="user.role === 'admin'" (change)="onRoleChange(user, $event)" style="margin-left: 10px;">
-          Admin
-        </mat-checkbox>
-
       </td>
     </ng-container>
 
     <!-- Define Header and Rows -->
-    <tr mat-header-row *matHeaderRowDef="['email', 'permissions']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['email', 'permissions']"></tr>
+    <tr mat-header-row *matHeaderRowDef="['email', 'role', 'permissions']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['email', 'role', 'permissions']"></tr>
   </table>
+
 </div>

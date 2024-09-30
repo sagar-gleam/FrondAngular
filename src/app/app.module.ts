@@ -34,6 +34,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     ConfirmDialogModule,
     MatCheckboxModule,
     TooltipModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatRadioModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

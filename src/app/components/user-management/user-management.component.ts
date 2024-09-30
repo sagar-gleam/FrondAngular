@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../authentication.service';
+import { AuthenticationService } from '../../sevices/authentication.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,6 +11,8 @@ export class UserManagementComponent implements OnInit {
   users: any[] = [];
   filteredUsers: any[] = [];
   loggedInUser: any; // Store logged-in user details
+
+  roles = ['user', 'admin']; // Possible roles
 
   constructor(private userService: AuthenticationService, private router: Router) {}
 
@@ -30,43 +32,22 @@ export class UserManagementComponent implements OnInit {
   fetchUsers(): void {
     this.userService.getUser().subscribe((data: any[]) => {
       this.users = data;
-      // Filter out the logged-in user (especially if they're an admin)
       this.filteredUsers = this.users.filter(user => user._id !== this.loggedInUser._id);
+      this.filteredUsers.forEach(user => {
+        // Ensure read is always true; load existing permissions for write and delete
+        user.permissions = {
+          read: true, // Always true
+          write: user.permissions?.write || false, // Load existing write permission
+          delete: user.permissions?.delete || false // Load existing delete permission
+        };
+      });
     });
   }
 
-  onPermissionChange(user: any, permission: string, event: any): void {
-    const isChecked = event.checked; // Access the checked property
-  
-    switch (permission) {
-      case 'read':
-        if (isChecked) {
-          this.grantReadPermission(user);
-        } else {
-          this.revokeReadPermission(user);
-        }
-        break;
-      case 'write':
-        if (isChecked) {
-          this.grantWritePermission(user);
-        } else {
-          this.revokeWritePermission(user);
-        }
-        break;
-      case 'delete':
-        if (isChecked) {
-          this.grantDeletePermission(user);
-        } else {
-          this.revokeDeletePermission(user);
-        }
-        break;
-    }
-  }
-  
   onRoleChange(user: any, event: any): void {
-    const isChecked = event.checked; // Access the checked property
-  
-    if (isChecked) {
+    const newRole = event.value; // Get the selected role from the dropdown
+
+    if (newRole === 'admin') {
       this.makeAdmin(user);
     } else {
       this.removeAdmin(user);
@@ -76,13 +57,40 @@ export class UserManagementComponent implements OnInit {
   makeAdmin(user: any): void {
     this.userService.promoteToAdmin(user._id).subscribe(() => {
       user.role = 'admin'; // Update user role locally
+      user.permissions = { read: false, write: false, delete: false }; // No permissions for admins
     });
   }
 
   removeAdmin(user: any): void {
     this.userService.removeAdmin(user._id).subscribe(() => {
       user.role = 'user'; // Update user role locally
+      user.permissions = { read: true, write: false, delete: false }; // Default permissions for users
     });
+  }
+  onPermissionChange(user: any, permission: string, event: any): void {
+    const isChecked = event.checked; 
+
+    switch (permission) {
+      case 'write':
+        user.permissions.write = isChecked;
+        if (isChecked) {
+          this.grantWritePermission(user);
+        } else {
+          this.revokeWritePermission(user);
+        }
+        break;
+  
+      case 'delete':
+        user.permissions.delete = isChecked;
+        if (isChecked) {
+          this.grantDeletePermission(user);
+        } else {
+          this.revokeDeletePermission(user);
+        }
+        break;
+    }
+    user.permissions.read = true;
+  
   }
 
   grantReadPermission(user: any): void {

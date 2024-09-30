@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HomeService } from '../../sevices/home.service';
 import { MatDialog } from '@angular/material/dialog';
 import { StudentFormDialogComponent } from '../student-form-dialog/student-form-dialog.component';
-import { AuthenticationService } from '../../authentication.service';
+import { AuthenticationService } from '../../sevices/authentication.service';
 import { Router } from '@angular/router'; // Import Router for navigation
 import { PrimeIcons, MenuItem, PrimeNGConfig, ConfirmationService } from 'primeng/api';
 import { MatTableDataSource } from '@angular/material/table';
@@ -52,16 +52,28 @@ export class HomeComponent implements OnInit {
 
   getUserInfo(): void {
     const user = JSON.parse(localStorage.getItem('user') || '{}'); // Assume user details are stored in local storage
-    console.log(user)
     this.userEmail = user.email || 'Guest'; // Default to 'Guest' if no user info
     this.userRole = user.role;
-    this.permissions = user.permissions
-    console.log(this.userRole);
-     if (this.permissions && this.permissions.read) {
+  
+    // If the user is an admin, grant all permissions
+    if (this.userRole === 'admin') {
+      this.permissions = {
+        read: true,
+        write: true,
+        delete: true
+      };
+    } else {
+      this.permissions = user.permissions || {}; // Get permissions for non-admin users
+    }
+  
+    // Remove action column if the user only has read permission
+    if (!this.permissions.write && !this.permissions.delete) {
       this.displayedColumns = this.displayedColumns.filter(column => column !== 'actions');
     }
-    
   }
+  
+  
+  
   
   confirm2(student: any) {
     this.confirmationService.confirm({
