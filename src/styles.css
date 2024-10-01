@@ -5,4 +5,9 @@ html, body { height: 100%; width: 100%;}
 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.p-dataview .p-dataview-content {
+    height: 75vh !important;
+    overflow: auto !important;
+  }
+
 

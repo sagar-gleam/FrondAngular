@@ -53,19 +53,21 @@
 
         <div class="file-upload-container">
           <input type="file" (change)="onFileChange($event)" accept="image/*" />
-          <div *ngIf="imagePreview">
+          <div *ngIf="imagePreview" style="float: right;">
             <img
               [src]="imagePreview"
               [alt]="imagePreview"
               class="image-preview" />
           </div>
         </div>
+
+        <div mat-dialog-actions>
+          <button mat-button (click)="onCancel()">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="!studentForm.valid">Submit</button>
+        </div>
       </div>
 
-      <div mat-dialog-actions>
-        <button mat-button (click)="onCancel()">Cancel</button>
-        <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="!studentForm.valid">Submit</button>
-      </div>
+     
     </form>
   </div>
 </div>

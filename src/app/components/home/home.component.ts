@@ -9,6 +9,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import {MessageService} from 'primeng/api';
 
+import { delay } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-home',
@@ -159,7 +161,11 @@ export class HomeComponent implements OnInit {
 
   fetchStudentsData(): void {
     this.loading = true;
-    this.studentService.getStudents().subscribe({
+    
+    // Introduce a delay of 3 seconds (3000 milliseconds) before fetching student data
+    this.studentService.getStudents().pipe(
+      delay(1000) // Delay for 3 seconds
+    ).subscribe({
       next: (data) => {
         this.students = data;
         this.filteredStudents = data.slice(0, this.currentCount);

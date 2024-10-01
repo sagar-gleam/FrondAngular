@@ -1,31 +1,26 @@
 <p-toast position="top-right"></p-toast>
 <p-confirmDialog [style]="{width: '30vw'}" [baseZIndex]="10000"></p-confirmDialog>
-
-<div class="headerpart">
-  <div class="info-container">
-    <span class="user-info">Logged in as: {{ userEmail }}</span>
+<div>
+  <div class="headerpart">
+    <div class="info-container">
+      <span class="user-info">Logged in as: {{ userEmail }}</span>
+    </div>
+    <div class="actions-container">
+      <button pButton type="button" icon="pi pi-user" [matMenuTriggerFor]="menu" class="p-button-rounded p-button-info"
+        aria-label="user"></button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="userProfile()">Profile</button>
+        <button mat-menu-item (click)="changePassword()">Change Password</button>
+        <button mat-menu-item (click)="onLogout()">Logout</button>
+      </mat-menu>
+      <button mat-raised-button color="accent" (click)="showUsers()" style="margin-left: 10px;"
+        *ngIf="userRole === 'admin'">
+        Manage Users
+      </button>
+    </div>
   </div>
 
-  <div class="actions-container">
-    <button pButton type="button" icon="pi pi-user" [matMenuTriggerFor]="menu" class="p-button-rounded p-button-info"
-      aria-label="user"></button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="userProfile()">Profile</button>
-      <button mat-menu-item (click)="changePassword()">Change Password</button>
-      <button mat-menu-item (click)="onLogout()">Logout</button>
-    </mat-menu>
-    <button mat-raised-button color="accent" (click)="showUsers()" style="margin-left: 10px;"
-      *ngIf="userRole === 'admin'">
-      Manage Users
-    </button>
-  </div>
-</div>
-
-<div *ngIf="loading" class="loading-container">
-  <div class="loader"></div>
-</div>
-
-<div class="card">
+ <div class="card">
   <p-dataView #dv [value]="filteredStudents" [layout]="layout">
     <ng-template pTemplate="header">
       <div class="header-container">
@@ -45,75 +40,79 @@
             </div>
             <div class="button-container">
               <button mat-raised-button color="primary" (click)="onAddItem()" style="margin-left: 10px;"
-                *ngIf="permissions.write || userRole === 'admin'">>
+                *ngIf="permissions.write || userRole === 'admin'">
                 Add Item
               </button>
             </div>
           </div>
         </mat-card-header>
         <mat-card-content>
-          <div *ngIf="errorMessage" class="error-message">
-            <p>{{ errorMessage }}</p>
+          <div *ngIf="loading" class="loading-container">
+            <div class="loader"></div>
           </div>
-          <div style="overflow-x: auto;">
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-              <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef> No. </th>
-                <td mat-cell *matCellDef="let student; let i = index"> {{ getIndex(i) }} </td>
-              </ng-container>
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let student"> {{ student.name }} </td>
-              </ng-container>
-              <ng-container matColumnDef="image">
-                <th mat-header-cell *matHeaderCellDef> Image </th>
-                <td mat-cell *matCellDef="let student">
-                  <img #studentImg [src]="getImageUrl(student)" alt="{{ student.name }}"
-                    (error)="studentImg.src='assets/avatar.png'"
-                    style="width: 70px; height: 70px; object-fit: cover; border-radius: 10px;" />
-                </td>
-
-              </ng-container>
-              <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef> Email </th>
-                <td mat-cell *matCellDef="let student"> {{ student.email }} </td>
-              </ng-container>
-              <ng-container matColumnDef="mobileNumber">
-                <th mat-header-cell *matHeaderCellDef> Mobile Number </th>
-                <td mat-cell *matCellDef="let student"> {{ student.mobileNumber }} </td>
-              </ng-container>
-              <ng-container matColumnDef="address">
-                <th mat-header-cell *matHeaderCellDef> Address </th>
-                <td mat-cell *matCellDef="let student"> {{ student.address }} </td>
-              </ng-container>
-              <ng-container matColumnDef="dob">
-                <th mat-header-cell *matHeaderCellDef> Date of Birth </th>
-                <td mat-cell *matCellDef="let student"> {{ student.dob | date:'shortDate' }} </td>
-              </ng-container>
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef> Actions </th>
-                <td mat-cell *matCellDef="let student">
-                  <button *ngIf="permissions.write || userRole === 'admin'" pButton type="button"
-                    [icon]="'pi pi-pencil'" (click)="onEdit(student)" class="p-button-rounded p-button-info">
-                  </button>
-
-                  <button *ngIf="permissions.delete || userRole === 'admin'" pButton type="button"
-                    [icon]="'pi pi-trash'" (click)="confirm2(student)" class="p-button-rounded p-button-danger">
-                  </button>
-                </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
+          <div *ngIf="!loading">
+            <div *ngIf="errorMessage" class="error-message">
+              <p>{{ errorMessage }}</p>
+            </div>
+            <div style="overflow-x: auto;" class="table-container">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef> No. </th>
+                  <td mat-cell *matCellDef="let student; let i = index"> {{ getIndex(i) }} </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Name </th>
+                  <td mat-cell *matCellDef="let student"> {{ student.name }} </td>
+                </ng-container>
+                <ng-container matColumnDef="image">
+                  <th mat-header-cell *matHeaderCellDef> Image </th>
+                  <td mat-cell *matCellDef="let student">
+                    <img #studentImg [src]="getImageUrl(student)" alt="{{ student.name }}"
+                      (error)="studentImg.src='assets/avatar.png'"
+                      style="width: 70px; height: 70px; object-fit: cover; border-radius: 10px;" />
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef> Email </th>
+                  <td mat-cell *matCellDef="let student"> {{ student.email }} </td>
+                </ng-container>
+                <ng-container matColumnDef="mobileNumber">
+                  <th mat-header-cell *matHeaderCellDef> Mobile Number </th>
+                  <td mat-cell *matCellDef="let student"> {{ student.mobileNumber }} </td>
+                </ng-container>
+                <ng-container matColumnDef="address">
+                  <th mat-header-cell *matHeaderCellDef> Address </th>
+                  <td mat-cell *matCellDef="let student"> {{ student.address }} </td>
+                </ng-container>
+                <ng-container matColumnDef="dob">
+                  <th mat-header-cell *matHeaderCellDef> Date of Birth </th>
+                  <td mat-cell *matCellDef="let student"> {{ student.dob | date:'shortDate' }} </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef> Actions </th>
+                  <td mat-cell *matCellDef="let student">
+                    <button *ngIf="permissions.write || userRole === 'admin'" pButton type="button"
+                      [icon]="'pi pi-pencil'" (click)="onEdit(student)" class="p-button-rounded p-button-info">
+                    </button>
+        
+                    <button *ngIf="permissions.delete || userRole === 'admin'" pButton type="button"
+                      [icon]="'pi pi-trash'" (click)="confirm2(student)" class="p-button-rounded p-button-danger">
+                    </button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="fixed-header"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
           </div>
+          <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page"></mat-paginator>
         </mat-card-content>
       </mat-card>
-      <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page"></mat-paginator>
     </ng-template>
 
     <ng-template pTemplate="grid" let-students>
       <div class="grid">
-        <div class="card" *ngFor="let student of filteredStudents">
+        <div class="card1" *ngFor="let student of filteredStudents">
           <img #studentImg [src]="getImageUrl(student)" (error)="studentImg.src='assets/avatar.png'"
             [alt]="student.name" style="width: 100%; height: 200px; object-fit: cover;">
           <div class="card-content">
@@ -138,4 +137,5 @@
 
   </p-dataView>
 
+</div>
 </div>

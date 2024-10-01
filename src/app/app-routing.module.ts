@@ -7,8 +7,8 @@ import { AuthGuard } from './guard/auth.guard';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
-import { RegistrationComponent } from './components/registration/registration.component';
-import { LoginComponent } from './components/login/login.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   { path: '', component: RegistrationComponent }, // Registration route

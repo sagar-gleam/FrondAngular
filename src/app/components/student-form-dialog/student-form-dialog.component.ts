@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HomeService } from '../../sevices/home.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-student-form-dialog',
@@ -19,7 +20,8 @@ export class StudentFormDialogComponent implements OnInit {
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<StudentFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private studentService: HomeService
+    private studentService: HomeService,
+    private messageService: MessageService
   ) {
     this.studentForm = this.fb.group({
       name: ['', Validators.required],
@@ -58,40 +60,32 @@ export class StudentFormDialogComponent implements OnInit {
   }
 
   onSubmit(): void {
-  if (this.studentForm.valid) {
-    const formData = new FormData();
-    Object.keys(this.studentForm.controls).forEach(key => {
-      const value = this.studentForm.get(key)?.value;
-      formData.append(key, value);
-    });
+    if (this.studentForm.valid) {
+      const formData = new FormData();
+      Object.keys(this.studentForm.controls).forEach(key => {
+        const value = this.studentForm.get(key)?.value;
+        formData.append(key, value);
+      });
 
-    if(this.selectedFile){
-      formData.append('image', this.selectedFile, this.selectedFile.name);
-    }
-      if (this.isEditMode) {
-        this.studentService.updateStudent(this.data._id, formData).subscribe({
-          next: () => this.dialogRef.close(true),
-          error: (error: any) => console.error('There was an error!', error)
-        });
-      } else {
-        this.studentService.addStudent(formData).subscribe({
-          next: () => this.dialogRef.close(true),
-          error: (error: any) => console.error('There was an error!', error)
-        });
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile, this.selectedFile.name);
       }
- 
+      const request$ = this.isEditMode
+        ? this.studentService.updateStudent(this.data._id, formData)
+        : this.studentService.addStudent(formData);
 
+      request$.subscribe({
+        next: () => {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: this.isEditMode ? 'Student updated successfully!' : 'Student added successfully!' });
+          this.dialogRef.close(true);
+        },
+        error: (error: any) => {
+          console.error('There was an error!', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'There was an error processing your request.' });
+        }
+      });
+    }
   }
-}
-
-// Helper method to convert image URL to binary format
-private convertImageToBinary(imageUrl: string): Promise<Blob> {
-  return fetch(imageUrl)
-    .then(response => response.blob());
-}
-
-  
-  
 
   onCancel(): void {
     this.dialogRef.close();
