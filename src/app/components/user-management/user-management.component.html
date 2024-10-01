@@ -3,7 +3,7 @@
   <button mat-raised-button color="primary" (click)="goBack()">Back to Home</button>
   <h2>User Management</h2>
 
-  <table mat-table [dataSource]="filteredUsers" class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef>Email</th>
       <td mat-cell *matCellDef="let user">{{ user.email }}</td>
@@ -41,18 +41,19 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['email', 'role', 'permissions']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['email', 'role', 'permissions']"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
+
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
 
   <div style="display: flex; justify-content: center; margin-top: 20px;">
     <button 
       mat-raised-button 
       [ngClass]="isUpdating ? 'button-enabled' : 'button-disabled'"
       (click)="updateAllPermissions()" 
-      [disabled]="!isUpdating"> <!-- Disable the button based on the flag -->
+      [disabled]="!isUpdating">
       Update All
     </button>
   </div>
-  
 </div>

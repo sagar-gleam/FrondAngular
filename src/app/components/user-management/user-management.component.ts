@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthenticationService } from '../../sevices/authentication.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -10,6 +12,11 @@ import { AuthenticationService } from '../../sevices/authentication.service';
   styleUrls: ['./user-management.component.css']
 })
 export class UserManagementComponent implements OnInit {
+  displayedColumns: string[] = ['email', 'role', 'permissions'];
+  dataSource = new MatTableDataSource<any>([]);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+
   users: any[] = [];
   filteredUsers: any[] = [];
   loggedInUser: any; // Store logged-in user details
@@ -26,6 +33,11 @@ export class UserManagementComponent implements OnInit {
     this.getLoggedInUser();
     this.fetchUsers();
   }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
 
   getLoggedInUser(): void {
     const storedUser = localStorage.getItem('user');
@@ -44,6 +56,9 @@ export class UserManagementComponent implements OnInit {
           ? { read: true, write: true, delete: true }
           : { read: true, write: user.permissions?.write || false, delete: user.permissions?.delete || false };
       });
+
+      // Show only the first 10 users
+      this.dataSource.data = this.filteredUsers // Limit to first 10 users
     });
   }
   
@@ -81,7 +96,6 @@ export class UserManagementComponent implements OnInit {
 
     this.userService.updateUserPermissionsBatch(permissionsPayload).subscribe(
       response => {
-        console.log('All permissions updated successfully:', response);
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Permissions and roles updated successfully!' });
       },
       error => {

@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import {MessageService} from 'primeng/api';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -27,6 +28,7 @@ export class HomeComponent implements OnInit {
   loading: boolean = false; 
   userRole: String = '';
   permissions: any;
+  currentCount: number = 12;
   
   
 
@@ -71,7 +73,11 @@ export class HomeComponent implements OnInit {
       this.displayedColumns = this.displayedColumns.filter(column => column !== 'actions');
     }
   }
-  
+  getImageUrl(student: any): string {
+    const baseUrl = 'http://localhost:4100/';
+    return student.image ? baseUrl + student.image : "assets/avatar.png'";
+  }
+
   
   
   
@@ -109,6 +115,7 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+ 
 
   onEdit(student: any): void {
     const dialogRef = this.dialog.open(StudentFormDialogComponent, {
@@ -155,7 +162,7 @@ export class HomeComponent implements OnInit {
     this.studentService.getStudents().subscribe({
       next: (data) => {
         this.students = data;
-        this.filteredStudents = data;
+        this.filteredStudents = data.slice(0, this.currentCount);
         this.dataSource.data = data;
         this.loading = false;
       },
@@ -168,7 +175,13 @@ export class HomeComponent implements OnInit {
     });
   }
   
-
+  loadMore(): void {
+    if (this.currentCount < this.students.length) {
+     
+      this.currentCount += 12; // Increase count
+      this.filteredStudents = this.students.slice(0, this.currentCount); // Update displayed students
+    }
+  }
   onSearch(): void {
     if (this.searchTerm) {
       // Filter the students based on the search term

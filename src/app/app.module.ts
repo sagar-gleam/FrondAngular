@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RegistrationComponent } from './registration/registration.component';
+import { RegistrationComponent } from './components/registration/registration.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -14,7 +14,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';  
 import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
-import { LoginComponent } from './login/login.component';
+
 import { HomeComponent } from './components/home/home.component';
 import { MatTableModule} from '@angular/material/table';
 import { StudentFormDialogComponent } from './components/student-form-dialog/student-form-dialog.component';
@@ -35,6 +35,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatRadioModule } from '@angular/material/radio';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [

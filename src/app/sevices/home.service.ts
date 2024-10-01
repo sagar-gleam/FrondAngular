@@ -2,14 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { apiConfig } from '../../environments/apiConfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HomeService {
-
-  private apiUrl = 'http://localhost:4100/api/studnets/getdata';
-  private baseUrl = 'http://localhost:4100/api/studnets';
 
   constructor(private http: HttpClient) {}
 
@@ -37,13 +35,13 @@ export class HomeService {
   }
 
   addStudent(student: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/savedata`, student, {
+    return this.http.post<any>(apiConfig.AddStudent, student, {
       headers: this.getHeaders()
     });
   }
 
   getStudents(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, {
+    return this.http.get<any[]>(apiConfig.GetStudent, {
       headers: this.getHeaders()
     }).pipe(
       catchError((error) => {
@@ -54,13 +52,13 @@ export class HomeService {
   }
 
   updateStudent(id: string, student: any): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/update/${id}`, student, {
+    return this.http.put<any>(`${apiConfig.UpdateStudent}/${id}`, student, {
       headers: this.getHeaders()
     });
   }
 
   deleteStudent(id: string): Observable<any> {
-    return this.http.delete<void>(`${this.baseUrl}/delete/${id}`, {
+    return this.http.delete<void>(`${apiConfig.DeleteStudent}/${id}`, {
       headers: this.getHeaders()
     });
   }

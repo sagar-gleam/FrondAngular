@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '../sevices/authentication.service';
+import { of } from 'rxjs';
+import { delay, switchMap } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
+import { AuthenticationService } from '../../sevices/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -30,12 +32,10 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log(this.loginForm.value);
 
       this.authenticationService.login(this.loginForm.value)
         .subscribe({
           next: (response: any) => {
-            console.log('Login successful', response);
             localStorage.setItem('token', JSON.stringify(response.token));
             localStorage.setItem('user', JSON.stringify(response.user));
             this.loginError = null; // Clear any previous errors
@@ -45,10 +45,9 @@ export class LoginComponent implements OnInit {
               detail: 'You have logged in successfully.'
             });
             
-            setTimeout(() => {
-              this.router.navigate(['/home']); 
-            }, 500);
-          // Navigate to the home page on success
+          
+                this.router.navigate(['/home']);
+            
           },
           error: (error: any) => {
             console.error('Login error', error);

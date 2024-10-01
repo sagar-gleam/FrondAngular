@@ -45,7 +45,6 @@ export class ChangePasswordComponent implements OnInit {
     const { currentPassword, newPassword } = this.passwordChangeForm.value;
   
     const token = localStorage.getItem('token'); // Or however you store your token
-    console.log(token,"tokakakn")
     if (!token) {
       this.snackBar.open('No authentication token found', 'Close', { duration: 3000 });
       return;

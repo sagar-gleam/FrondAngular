@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RegistrationService } from '../sevices/registration.service'; // Import the service
+import { RegistrationService } from '../../sevices/registration.service'; // Import the service
 import { Router } from '@angular/router';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
+import { of } from 'rxjs';
+import { delay, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-registration',
@@ -33,26 +35,27 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registrationForm.valid) {
-      console.log(this.registrationForm.value);
-
       // Use the service to post the form data
       this.registrationService.saveData(this.registrationForm.value)
         .subscribe({
           next: (response: any) => {
-            console.log('Data saved successfully', response);
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
-              detail: 'Data Registered Successfully'
-            });
-            
-            setTimeout(() => {
-            this.router.navigate(['/login']);  
-            }, 1000);
-            // this.registrationForm.reset();
+              detail: 'Data Registered Successfully',
+              life: 3000 
+            });         
+            of(null).pipe(
+              delay(1000), // Delay for 3 seconds
+              switchMap(() => {
+                this.router.navigate(['/login']);
+                return of(null);
+              })
+            ).subscribe();
           },
-          error: (error: any) => {
+          error: (error: any) => {  
             console.error('Error saving data', error);
+            
           }
         });
     }

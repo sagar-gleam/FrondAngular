@@ -19,8 +19,6 @@ onBack(){
 ngOnInit(): void {
   // Retrieve and parse user object from local storage
   const userJson = localStorage.getItem('user');
-  console.log(userJson);
-  
   
   if (userJson) {
     try {
